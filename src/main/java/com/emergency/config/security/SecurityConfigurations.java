@@ -27,10 +27,37 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable()) // ok para teste; em produção, reavalie
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/role/register").permitAll()
+
+
+                        .requestMatchers(HttpMethod.POST, "/team/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/team/update").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/team/list/disabled").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/team/list/enable").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/team/delete").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/status/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/status/update").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/status/list").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/status/list/disabled").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/status/list/enable").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/status/delete").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/occurrence/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/occurrence/update").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/occurrence/list").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/occurrence/list/disabled").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/occurrence/list/enable").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/occurrence/delete").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/logs").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/logs/list").permitAll()
+
+
                         // Swagger
                         .requestMatchers(
                                 "/v3/api-docs/**",

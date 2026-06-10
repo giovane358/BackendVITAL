@@ -8,26 +8,25 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "roles")
-@Table(name = "roles")
+@Entity
+@Table(name = "status")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Roles {
+public class Status {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "nome")
     private String nome;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
-    public Roles(String nome) {
-        this.nome = nome;
-    }
+    private Boolean active = true;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private Usuario createdBy;
 }

@@ -28,7 +28,7 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private  UsuariosRepository usuariosRepository;
+    private UsuariosRepository usuariosRepository;
 
     @Autowired
     private TokenService tokenService;
@@ -43,16 +43,15 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     @ApiResponse(responseCode = "403", description = "Acesso negado")
     @ApiResponse(responseCode = "401", description = "Dados incorretos")
-    public ResponseEntity<Usuario> registerUser(@RequestBody @Valid RegisterDTO dto){
-        if (this.usuariosRepository.findByEmail(dto.email()) != null){
+    public ResponseEntity<Usuario> registerUser(@RequestBody @Valid RegisterDTO dto) {
+        if (this.usuariosRepository.findByEmail(dto.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
         String encriptedPassword = new BCryptPasswordEncoder().encode(dto.senha());
 
-        Roles rolesId = rolesRepository.findById(dto.roleID())
-                .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+        Roles rolesId = rolesRepository.findById(dto.roleID()).orElseThrow(() -> new RuntimeException("Role não encontrada"));
 
-        Usuario usuario = new Usuario(dto.nome(), dto.cpf(), dto.email(),dto.phone(), encriptedPassword, rolesId);
+        Usuario usuario = new Usuario(dto.nome(), dto.cpf(), dto.email(), dto.phone(), encriptedPassword, rolesId);
 
         this.usuariosRepository.save(usuario);
         return ResponseEntity.ok(usuario);
@@ -65,10 +64,10 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     @ApiResponse(responseCode = "403", description = "Acesso negado")
     @ApiResponse(responseCode = "401", description = "Dados incorretos")
-    public ResponseEntity login(@RequestBody @Valid LoginDTO dto){
+    public ResponseEntity login(@RequestBody @Valid LoginDTO dto) {
         var userNamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
         var user = this.authenticationManager.authenticate(userNamePassword);
-        var token = tokenService.generateToken((Usuario)  user.getPrincipal());
+        var token = tokenService.generateToken((Usuario) user.getPrincipal());
         return ResponseEntity.ok(new TokenDTO(token));
     }
 }
