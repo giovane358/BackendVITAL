@@ -20,7 +20,7 @@ import java.io.IOException;
 @Component
 @SecurityScheme(name = SecurityFilter.SECURITY,
         type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT", scheme = "Bearer")
+        bearerFormat = "JWT", scheme = "bearer")
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -46,16 +46,22 @@ public class SecurityFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        System.out.println("=== SECURITY FILTER ===");
+        System.out.println("URI: " + request.getRequestURI());
+        System.out.println("Authorization: " + request.getHeader("Authorization"));
+
         String token = recoverToken(request);
 
         if (token != null) {
             try {
                 // valida o token e recebe o subject/username (ex: email)
                 String username = tokenService.validateToken(token);
+                System.out.println("USERNAME: " + username);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     // carrega o usuário via AuthorizationService (UserDetailsService)
                     UserDetails userDetails = authorizationService.loadUserByUsername(username);
+                    System.out.println("USER DETAILS: " + userDetails);
 
                     if (userDetails != null) {
                         var authentication = new UsernamePasswordAuthenticationToken(
@@ -64,10 +70,14 @@ public class SecurityFilter extends OncePerRequestFilter {
                                 userDetails.getAuthorities()
                         );
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                        System.out.println("AUTH SETADA");
+                        System.out.println(SecurityContextHolder.getContext().getAuthentication());
                     }
                 }
             } catch (Exception ex) {
                 // Não interrompa a cadeia — apenas limpe o contexto para segurança
+                ex.printStackTrace();
                 SecurityContextHolder.clearContext();
                 // opcional: log.warn("Erro ao validar token: {}", ex.getMessage());
             }

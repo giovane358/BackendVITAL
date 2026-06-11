@@ -3,6 +3,7 @@ package com.emergency.controller;
 import com.emergency.model.entity.Logs;
 import com.emergency.model.entity.Usuario;
 import com.emergency.repository.LogsRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/logs")
+@SecurityRequirement(name = "BearerAuth")
 public class LogsController {
 
     @Autowired

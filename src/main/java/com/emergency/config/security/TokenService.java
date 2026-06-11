@@ -37,7 +37,7 @@ public class TokenService {
     public  String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm).withIssuer("instituto-busca-longe").build().verify(token).getSubject();
+            return JWT.require(algorithm).withIssuer("API").build().verify(token).getSubject();
         }catch (JWTVerificationException exception){
             throw new RuntimeException("Erro ao validar JWT", exception); // Quando não e possível validar o token
         }

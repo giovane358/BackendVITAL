@@ -8,4 +8,5 @@ public record TeamDTo(
         String vehicle,
         Double currentLat,
         Double currentLng
+
 ) {}

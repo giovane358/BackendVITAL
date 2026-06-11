@@ -7,6 +7,7 @@ import com.emergency.dto.status.StatusUpdateDTo;
 import com.emergency.model.entity.Status;
 import com.emergency.model.entity.Usuario;
 import com.emergency.repository.StatusRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/status")
+@SecurityRequirement(name = "BearerAuth")
 public class StatusController {
 
     @Autowired
@@ -30,7 +32,6 @@ public class StatusController {
         Usuario usuario = null;
 
         if (authentication != null && authentication.getPrincipal() instanceof Usuario) {
-
             usuario = (Usuario) authentication.getPrincipal();
         }
 
@@ -125,19 +126,16 @@ public class StatusController {
         }
 
         if (status.getCreatedBy() == null || !status.getCreatedBy().getId().equals(usuario.getId())) {
-
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         if (data.nome() != null && !data.nome().isBlank()) {
 
             Status statusExistente = statusRepository.findByNome(data.nome());
-
             if (statusExistente != null && !statusExistente.getId().equals(status.getId())) {
-
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            }
 
+            }
             status.setNome(data.nome());
         }
 

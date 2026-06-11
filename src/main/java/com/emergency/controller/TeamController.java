@@ -7,6 +7,7 @@ import com.emergency.model.entity.Team;
 import com.emergency.model.entity.Usuario;
 import com.emergency.repository.TeamRepository;
 import com.emergency.service.LogsService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/team")
+@SecurityRequirement(name = "BearerAuth")
 public class TeamController {
 
     @Autowired
@@ -28,20 +30,20 @@ public class TeamController {
     @PostMapping("/register")
     public ResponseEntity<Team> register(Authentication authentication, @RequestBody @Valid TeamDTo data) {
 
+
         Usuario usuario = null;
+
 
         if (authentication != null && authentication.getPrincipal() instanceof Usuario) {
 
             usuario = (Usuario) authentication.getPrincipal();
+            System.out.println(usuario);
         }
 
-        if (usuario == null) {
+        if (this.teamRepository.findByName(data.name())!= null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (teamRepository.findByName(data.name()) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
 
         Team team = new Team();
 
@@ -51,9 +53,9 @@ public class TeamController {
         team.setCurrentLng(data.currentLng());
 
         team.setActive(true);
+
         team.setCreatedBy(usuario);
 
-        teamRepository.save(team);
 
         teamRepository.save(team);
 

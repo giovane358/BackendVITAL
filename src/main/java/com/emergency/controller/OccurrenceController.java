@@ -11,6 +11,7 @@ import com.emergency.repository.OccurrenceRepository;
 import com.emergency.repository.StatusRepository;
 import com.emergency.repository.TeamRepository;
 import com.emergency.repository.UsuariosRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/occurrence")
+@SecurityRequirement(name = "BearerAuth")
 public class OccurrenceController {
 
     @Autowired
